@@ -115,6 +115,28 @@ public class UserDao {
         }
     }
 
+    public boolean updateUserRoleAndStatus(int userId, String newRole,
+                                           String newStatus)
+            throws SQLException {
+
+        if (newRole == null || newStatus == null) {
+            return false;
+        }
+
+        String sql = "UPDATE Users SET role = ?, status = ? "
+                + "WHERE user_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newRole.trim().toUpperCase());
+            ps.setString(2, newStatus.trim().toUpperCase());
+            ps.setInt(3, userId);
+
+            return ps.executeUpdate() == 1;
+        }
+    }
+
     private List<User> queryUsers(String sql)
             throws SQLException {
 
